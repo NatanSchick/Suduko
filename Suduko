@@ -1,0 +1,85 @@
+public class Suduko{
+    int[][] board = new int[9][9];
+    public Suduko(){
+        for(int i = 0;i < 81;i++){
+            board[i%9][i/9] = 0;
+        }
+    }
+    public Suduko(Suduko other){
+        CopyBoard(other.board);
+    }
+    public void CopyBoard(int[][] other){
+        for(int i = 0;i < 81;i++){
+            board[i % 9][i / 9] = other[i % 9][i / 9];
+        }
+    }
+    boolean solved = false;
+    public void Play(int i,int[][] arr){
+        if(i == 81){
+            CopyBoard(arr);
+            solved = true;
+            return;
+        }
+        if(board[i%9][i/9] > 0){
+            Play(i+1,arr);
+            return;
+        }
+        for(int k = 1;k < 10;k++){
+            boolean HasMoved = false;
+            Suduko s = new Suduko();
+            s.CopyBoard(arr);
+            if(s.board[i%9][i/9]  == 0 && s.Move(i%9,i/9,k)){
+                Play(i+1,s.board);
+                HasMoved = true;
+                if(solved){
+                    return;
+                }
+            }
+        }
+    }
+    public boolean CanMove(int x,int y,int num){
+        for(int i = 0;i < 9;i++){
+            if(board[x][i] == num || board[i][y] == num){
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public boolean Move(int x,int y,int num){
+        if(CanMove(x,y,num)){
+            board[x][y] = num;
+            return true;
+        }
+        return false;
+    }
+    
+    public String toString(){
+        String str = "";
+        for(int i = 0;i < 81;i++){
+            if(i % 9 == 0){
+                str += "\n"+board[i%9][i/9] +"|";
+                continue;
+            }
+            str += board[i/9][i%9]+"|";
+        }
+        return str;
+    }
+    
+    public static void main(String [] args){
+        Suduko s = new Suduko();
+        s.board = new int[][]{
+            {0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,5,0,0,0},
+            {0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0},
+            {0,2,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0}
+        };
+        s.Play(0,s.board);
+        System.out.println(s);
+    }
+}
