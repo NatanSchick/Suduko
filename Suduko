@@ -1,9 +1,17 @@
+import java.util.Random;
 public class Suduko{
     int[][] board = new int[9][9];
     public Suduko(){
-        for(int i = 0;i < 81;i++){
-            board[i%9][i/9] = 0;
-        }
+        
+    }
+    public Suduko(int Level){
+       Play(0,board);
+       Random rand = new Random();
+       for(int i = 0;i < 81;i++){
+           if(rand.nextInt(Level + 1) == 1){
+               board[i % 9][i / 9] = 0;
+           }
+       }
     }
     public Suduko(Suduko other){
         CopyBoard(other.board);
@@ -58,28 +66,25 @@ public class Suduko{
         String str = "";
         for(int i = 0;i < 81;i++){
             if(i % 9 == 0){
+                if(board[i%9][i/9] == 0){
+                    str += "\n |";
+                    continue;
+                }
                 str += "\n"+board[i%9][i/9] +"|";
                 continue;
             }
-            str += board[i/9][i%9]+"|";
+            if(board[i%9][i/9] == 0){
+                    str += " |";
+                    continue;
+            }
+            str += board[i%9][i/9]+"|";
         }
         return str;
     }
     
     public static void main(String [] args){
-        Suduko s = new Suduko();
-        s.board = new int[][]{
-            {0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,5,0,0,0},
-            {0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0},
-            {0,2,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0}
-        };
-        s.Play(0,s.board);
+        Suduko s = new Suduko(1);
+        //s.Play(0,s.board);
         System.out.println(s);
     }
 }
